@@ -16630,7 +16630,7 @@
             const saleLoading = document.getElementById('saleLoading');
             const saleType = document.getElementById('saleType');
             const solicitanteName = document.getElementById('solicitanteName');
-            quantityInput.value = 0;
+            quantityInput.value = '';
             
             // Elementos da seção de GARANTIA
             const warrantyBtn = document.getElementById('warrantyBtn');
@@ -16649,7 +16649,7 @@
             const warrantyLoading = document.getElementById('warrantyLoading');
             const invoiceAttachments = document.getElementById('invoiceAttachments');
             const invoicesPreview = document.getElementById('invoicesPreview');
-            warrantyQuantityInput.value = 0;
+            warrantyQuantityInput.value = '';
 
             //FUNÇÃO DE VALIDAÇÃO:
             function validarQuantidadeAntesAdicionar(quantidadeInput, tipo) {
@@ -16664,7 +16664,7 @@
                     existingError.remove();
                 }
                 
-                if (quantidade <= 0) {
+                if (!quantidadeInput.value.trim() || quantidade <= 0) {
                     // Aplicar estilo de erro
                     quantidadeInput.style.borderColor = 'var(--danger)';
                     
@@ -17833,7 +17833,7 @@ async function enviarParaGoogle(dadosDocumento, anexos = []) {
                 addSelectedProducts(availableProducts, filteredProducts, selectedProducts, quantity, selectedItemsContainer);
                 
                 // ✅ SEMPRE limpar o campo após adicionar
-                quantityInput.value = 0;
+                quantityInput.value = '';
 
                 quantityInput.style.borderColor = '#ddd';
                     let existingError = quantityInput.parentNode.querySelector('.quantity-error-message');
@@ -17863,7 +17863,7 @@ async function enviarParaGoogle(dadosDocumento, anexos = []) {
                 addSelectedProducts(warrantyAvailableProducts, warrantyFilteredProducts, warrantySelectedProducts, quantity, warrantySelectedItemsContainer);
                 
                 // ✅ SEMPRE limpar o campo após adicionar
-                warrantyQuantityInput.value = 0;
+                warrantyQuantityInput.value = '';
 
                 warrantyQuantityInput.style.borderColor = '#ddd';
                     let existingError = warrantyQuantityInput.parentNode.querySelector('.quantity-error-message');
