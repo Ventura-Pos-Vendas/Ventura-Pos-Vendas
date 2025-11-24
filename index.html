@@ -17378,7 +17378,7 @@ function coletarCEPs(tipo) {
                                 console.log('❌ Erro HTTP:', response.status);
                                 resolve({
                                     success: true,
-                                    message: '✅ Solicitação registrada! O sistema processará em background.'
+                                    message: '❌ Solicitação interrompida! Favor Verificar conexão com a internet.'
                                 });
                             }
 
@@ -17388,7 +17388,7 @@ function coletarCEPs(tipo) {
                             
                             resolve({
                                 success: true,
-                                message: '✅ Solicitação registrada! O sistema processará em background.'
+                                message: '❌ Solicitação interrompida! Favor Verificar conexão com a internet..'
                             });
                         }
 
@@ -17396,7 +17396,7 @@ function coletarCEPs(tipo) {
                         console.error('💥 ERRO GERAL:', error);
                         resolve({
                             success: true,
-                            message: '✅ Solicitação registrada! O sistema processará em background.'
+                            message: '❌ Solicitação interrompida! Favor Verificar conexão com a internet.'
                         });
                     }
                 });
