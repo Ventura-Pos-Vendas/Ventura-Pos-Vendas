@@ -1018,7 +1018,7 @@
                 <button id="exportSaleBtn" class="btn btn-export"><i class="fas fa-envelope"></i> Enviar</button>
                 <div id="saleLoading" class="loading">
                     <div class="spinner"></div>
-                    <p>Enviando e-mail...</p>
+                    <p>Aguarde, Enviando Solicitação (NÃO FECHE A PÁGINA ATÉ MODAL DE CONFIRMAÇÃO)...</p>
                 </div>
             </div>
         </div>
@@ -17321,8 +17321,8 @@ function coletarCEPs(tipo) {
                                 try {
                                     console.log(`📄 Convertendo anexo ${i + 1}/${anexosParaProcessar.length}: ${anexo.name}`);
                                     
-                                    if (anexo.size > 5 * 1024 * 1024) {
-                                        console.log(`⚠️  Anexo muito grande (>5MB), pulando: ${anexo.name}`);
+                                    if (anexo.size > 25 * 1024 * 1024) {
+                                        console.log(`⚠️  Anexo muito grande (>25MB), pulando: ${anexo.name}`);
                                         continue;
                                     }
                                     
