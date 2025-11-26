@@ -18190,7 +18190,7 @@ async function generateWarrantyWord() {
                 </tr>
             </table>
             <p><strong>Total de peças / Serviços: ${dados.pecas.length}</strong></p>
-            <p><strong>${dados.tipo === 'venda' ? 'Observação: A forma de pagamento padrão é boleto com vencimento em 30 dias. Caso haja interesse em outras condições de pagamento, entre em contato conosco via WhatsApp ou e-mail.' : ''}</strong></p>
+            <p>${dados.tipo === 'venda' ? '<strong>Observação:</strong> A forma de pagamento padrão é <strong>BOLETO</strong> com <strong>VENCIMENTO</strong> em <strong>30 DIAS</strong>. Caso haja interesse em outras condições de pagamento, entre em contato conosco via WhatsApp ou E-mail.' : ''}</p>
             </div>`;
                         }
 
@@ -18384,5 +18384,18 @@ function validarTamanhoArquivos(input) {
             input.classList.remove('anexo-error');
         }
     </script>
+
+    <footer style="
+        width: 100%;
+        text-align: center;
+        padding: 8px 0;
+        font-size: 13px;
+        color: #fff;
+        background-color: #222;
+        margin-top: 2px;
+        ">
+            © 2025 Ventura Experience — Developed by Lucas Bassi
+    </footer>
+
 </body>
 </html>
