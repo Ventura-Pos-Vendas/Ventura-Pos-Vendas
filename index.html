@@ -17859,27 +17859,45 @@
                             // CONVERTER ANEXOS PARA BASE64
                             const anexosBase64 = [];
                             if (anexos && anexos.length > 0) {
-                                const limiteAnexos = 5;
-                                const anexosParaProcessar = anexos.slice(0, limiteAnexos);
-                                
+                                // ALTERADO AQUI
+                                const LIMITE_ARQUIVOS = 15;
+                                const LIMITE_VIDEO_MB = 10;
+                                const LIMITE_ARQUIVO_MB = 25;
+                                const LIMITE_TOTAL_MB = 40;
+                                const anexosParaProcessar = anexos.slice(0, LIMITE_ARQUIVOS);
+                                const anexosIgnorados = [];
+                                let tamanhoTotalMB = 0;
+
                                 for (let i = 0; i < anexosParaProcessar.length; i++) {
                                     const anexo = anexosParaProcessar[i];
                                     try {
-                                        if (anexo.size > 25 * 1024 * 1024) {
+                                        const tamanhoMB = anexo.size / (1024 * 1024);
+                                        const isVideo = anexo.type.startsWith('video/');
+                                        const limiteArquivo = isVideo ? LIMITE_VIDEO_MB : LIMITE_ARQUIVO_MB;
+
+                                        if (tamanhoMB > limiteArquivo) {
+                                            anexosIgnorados.push(`"${anexo.name}" (${tamanhoMB.toFixed(1)}MB — limite ${isVideo ? 'vídeo' : 'arquivo'}: ${limiteArquivo}MB)`);
                                             continue;
                                         }
-                                        
+
+                                        if (tamanhoTotalMB + tamanhoMB > LIMITE_TOTAL_MB) {
+                                            anexosIgnorados.push(`"${anexo.name}" — limite total de ${LIMITE_TOTAL_MB}MB atingido`);
+                                            continue;
+                                        }
+
                                         const base64 = await fileToBase64(anexo);
-                                        
-                                        anexosBase64.push({
-                                            nome: anexo.name,
-                                            tipo: anexo.type,
-                                            conteudo: base64
-                                        });
-                                        
+                                        anexosBase64.push({ nome: anexo.name, tipo: anexo.type, conteudo: base64 });
+                                        tamanhoTotalMB += tamanhoMB;
+
                                     } catch (error) {
                                         console.error(`Erro no anexo ${i + 1}:`, error);
+                                        anexosIgnorados.push(`"${anexo.name}" — erro ao processar`);
                                     }
+                                }
+
+                                // Guardar lista de ignorados para mostrar no modal
+                                if (anexosIgnorados.length > 0) {
+                                    dadosParaEnvio._anexosIgnorados = anexosIgnorados;
                                 }
                             }
 
@@ -17918,7 +17936,8 @@
                                         success: true,
                                         message: result.message || 'Solicitação enviada!',
                                         numeroProtocolo: dadosParaEnvio.numeroProtocolo,
-                                        emailCliente: dadosParaEnvio.emailCliente
+                                        emailCliente: dadosParaEnvio.emailCliente,
+                                        _anexosIgnorados: dadosParaEnvio._anexosIgnorados || []
                                     });
                                 } else {
                                     resolve({
@@ -18175,10 +18194,19 @@
                             protocoloNumero.textContent = resultado.numeroProtocolo || dadosGarantia.numeroProtocolo || 'N/A';
                             protocoloTipo.textContent = 'GARANTIA';
                             emailClienteEnviado.textContent = resultado.emailCliente || emailCliente || 'Não informado';
-                            modalMessage.textContent = 'Sua solicitação de garantia foi enviada com sucesso!';
+
+                            let msgModal = 'Sua solicitação foi enviada com sucesso!';
+
+                            if (resultado._anexosIgnorados && resultado._anexosIgnorados.length > 0) {
+                                msgModal += '\n\n⚠️ Os seguintes arquivos NÃO foram enviados por email (tamanho excedido):\n• ' 
+                                    + resultado._anexosIgnorados.join('\n• ')
+                                    + '\n\nComprima vídeos antes de enviar (recomendado: abaixo de 10MB).';
+                            }
                             
+                            modalMessage.textContent = msgModal;
                             showModal();
                             limparFormularioGarantia();
+
                         } else {
                             alert(resultado.message || 'Erro ao enviar documento');
                         }
