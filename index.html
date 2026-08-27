@@ -974,7 +974,7 @@
     </div>
     
     <div class="service-type">
-        <button id="saleBtn" class="sale-btn active"><i class="fas fa-shopping-cart"></i> ORÇAMENTOS</button>
+        <button id="saleBtn" class="sale-btn active"><i class="fas fa-shopping-cart"></i> VENDAS</button>
         <button id="warrantyBtn" class="warranty-btn"><i class="fas fa-shield-alt"></i> GARANTIAS</button>
         <a href="https://ventura-pos-vendas.github.io/status-clientes/" target="_blank" class="new-page-btn">
             <i class="fa-solid fa-clipboard"></i> MEUS CASOS
@@ -1004,8 +1004,8 @@
             <label for="saleType" class="required">Tipo de Solicitação</label>
             <select id="saleType" required>
                 <option value="">Selecione o tipo...</option>
-                <option value="consulta">Consulta de Valores</option>
-                <option value="faturamento">Solicitação de Faturamento</option>
+                <option value="consulta">ORÇAMENTO - (Apenas para consultar valores, NÃO será faturado)</option>
+                <option value="faturamento">FATURAMENTO - (Emitirá um pedido que será faturado e enviado)</option>
                 <option value="encomenda" style="display: none;">Encomenda</option>
             </select>
             <div class="error-message">Este campo é obrigatório</div>
