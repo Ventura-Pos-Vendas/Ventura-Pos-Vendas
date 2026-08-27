@@ -20284,10 +20284,24 @@
                         exportEncomendaBtn.disabled = true;
                         exportEncomendaBtn.innerHTML = 'Processando...';
 
-                    } else {
-                        if (selectedProducts.length === 0) {
-                            alert('Nenhuma peça selecionada para o relatório!');
-                            return;
+                        } else {
+                            if (selectedProducts.length === 0) {
+                                alert('Nenhuma peça selecionada para o relatório!');
+                                return;
+                        }
+
+                        // VALIDAÇÃO MÍNIMA DE R$ 500,00 SOMENTE PARA SOLICITAÇÃO DE FATURAMENTO
+                        if (tipoSolicitacao === 'faturamento') {
+                            const totalFaturamento = selectedProducts.reduce((total, peca) => {
+                                const valorUnitario = parseFloat(peca.valor) || 0;
+                                const quantidade = parseInt(peca.quantity) || 0;
+                                return total + (valorUnitario * quantidade);
+                            }, 0);
+
+                            if (totalFaturamento < 500) {
+                                    showMinimumValueModal(totalFaturamento)
+                                return;
+                            }
                         }
                     }
 
@@ -21077,6 +21091,19 @@
                 function closeModal() {
                     confirmationModal.style.display = 'none';
                     protocoloInfo.style.display = 'none';
+                }
+
+                function showMinimumValueModal(total) {
+                    const modalMessage = document.getElementById('modalMessage');
+                    
+                    protocoloInfo.style.display = 'none';
+                    
+                    modalMessage.textContent =
+                        `Para Solicitação de Faturamento, o valor mínimo do pedido é de R$ 500,00.\n\n` +
+                        `Valor atual: R$ ${total.toFixed(2).replace('.', ',')}\n\n` +
+                        `Adicione mais peças ou aumente a quantidade para atingir o valor mínimo.`;
+
+                    showModal();
                 }
 
                 // ==================================================
