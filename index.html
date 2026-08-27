@@ -21599,28 +21599,45 @@
                 input.classList.remove('anexo-error');
             }
 
-// No carregamento da página, verificar se há parâmetro na URL
-window.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tipoParam = urlParams.get('tipo');
-    
-    if (tipoParam) {
-        const saleType = document.getElementById('saleType');
-        if (saleType) {
-            // Encontrar a opção que corresponde ao parâmetro
-            const options = saleType.options;
-            for (let i = 0; i < options.length; i++) {
-                if (options[i].value === tipoParam || 
-                    options[i].text.toLowerCase().includes(tipoParam.toLowerCase())) {
-                    saleType.value = options[i].value;
-                    // Disparar evento change para acionar o toggle
-                    saleType.dispatchEvent(new Event('change', { bubbles: true }));
-                    break;
+        // No carregamento da página, verificar se há parâmetro na URL
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tipoParam = urlParams.get('tipo');
+            
+            if (tipoParam) {
+                const saleType = document.getElementById('saleType');
+                if (saleType) {
+                    // Encontrar a opção que corresponde ao parâmetro
+                    const options = saleType.options;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].value === tipoParam || 
+                            options[i].text.toLowerCase().includes(tipoParam.toLowerCase())) {
+                            saleType.value = options[i].value;
+                            // Disparar evento change para acionar o toggle
+                            saleType.dispatchEvent(new Event('change', { bubbles: true }));
+                            break;
+                        }
+                    }
                 }
             }
-        }
-    }
-});
+        });
+
+       document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("confirmationModal");
+            const modalMessage = document.getElementById("modalMessage");
+            const protocoloInfo = document.getElementById("protocoloInfo");
+
+            // Esconde informações de protocolo
+            protocoloInfo.style.display = "none";
+
+            // Mensagem do popup inicial
+            modalMessage.textContent =
+                "Informamos que o valor mínimo para solicitação de faturamento foi atualizado.";
+
+            // Abre o modal
+            modal.style.display = "flex";
+        });
+
         </script>
 
         <footer style="
