@@ -465,6 +465,36 @@
             cursor: pointer;
             width: 100%;
         }
+        .aviso-boletim {
+            background-color: #fff8e1;
+            border-left: 4px solid var(--warning);
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .aviso-boletim i {
+            font-size: 22px;
+            color: var(--warning);
+        }
+        .aviso-boletim p {
+            margin: 0;
+            flex: 1;
+            color: #333;
+            font-size: 14px;
+        }
+        .aviso-boletim a {
+            color: #007bff;
+            font-weight: bold;
+            text-decoration: underline;
+            white-space: nowrap;
+        }
+        .aviso-boletim a:hover {
+            color: #0056b3;
+        }
         .error-message {
             color: var(--danger);
             font-size: 12px;
@@ -956,6 +986,17 @@
     
     <!-- Seção de Venda -->
     <div id="saleSection" class="section active">
+
+        <div class="aviso-boletim">
+            <i class="fas fa-triangle-exclamation"></i>
+            <p>
+                O valor mínimo para compra de peças em nossa rede foi atualizado. Para mais detalhes confira o
+                <a href="https://raw.githubusercontent.com/Ventura-Pos-Vendas/status-clientes/main/assets/boletim_informativo_compras_de_peças.jpg" target="_blank">
+                    Boletim Informativo
+                </a>.
+            </p>
+        </div>
+
         <h2><i class="fas fa-store"></i> Dados do Revendedor/Oficina Autorizada</h2>
 
         <!-- Tipo de Solicitação -->
@@ -21130,10 +21171,21 @@
                     
                     protocoloInfo.style.display = 'none';
                     
-                    modalMessage.textContent =
-                        `Para Solicitação de Faturamento, o valor mínimo do pedido é de R$ 500,00.\n\n` +
-                        `Valor atual: R$ ${total.toFixed(2).replace('.', ',')}\n\n` +
-                        `Adicione mais peças ou aumente a quantidade para atingir o valor mínimo.`;
+                    modalMessage.innerHTML =
+                     `<div class="aviso-boletim">
+                            <i class="fas fa-triangle-exclamation"></i>
+                            <p>
+                                O valor mínimo para compra de peças em nossa rede foi atualizado. 
+                                Para mais detalhes confira o
+                                <a href="https://raw.githubusercontent.com/Ventura-Pos-Vendas/status-clientes/main/assets/boletim_informativo_compras_de_peças.jpg" target="_blank">
+                                    Boletim Informativo
+                                </a>.
+                            </p>
+                        </div>` +
+
+                        `Valor mínimo: R$ 500,00<br>` +
+                        `Valor atual: R$ ${total.toFixed(2).replace('.', ',')}<br><br>` +
+                        `Adicione mais peças ou aumente a quantidade para atingir o valor mínimo.<br>`;
 
                     showModal();
                 }
