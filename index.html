@@ -21158,7 +21158,8 @@
                     updateSelectedItemsDisplay(productsArray, container);
                 }
                 
-                function showModal() {
+                window.showModal = function showModal() {
+                    const confirmationModal = document.getElementById('confirmationModal');
                     confirmationModal.style.display = 'block';
                 }
                 
