@@ -272,6 +272,18 @@
             overflow-y: auto;
             margin: 15px 0;
         }
+        .selected-items-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--primary);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            border-top: 2px solid var(--primary);
+        }
         .selected-item {
             display: flex;
             flex-direction: column;
@@ -1224,6 +1236,7 @@
                     <div id="selectedItemsContainer" class="selected-items-container">
                         <div class="no-items">Nenhuma peça selecionada</div>
                     </div>
+                    <div id="selectedItemsTotal" class="selected-items-total">Total: R$ 0,00</div>
                     <button id="exportSaleBtn" class="btn btn-export"><i class="fas fa-envelope"></i> Enviar</button>
                     <div id="saleLoading" class="loading">
                         <div class="spinner"></div>
@@ -20978,6 +20991,8 @@
                 
                 function updateSelectedItemsDisplay(productsArray, container) {
                     container.innerHTML = '';
+
+                    atualizarTotalSelecionado(productsArray, container);
                     
                     if (productsArray.length === 0) {
                         container.innerHTML = '<div class="no-items">Nenhuma peça selecionada</div>';
@@ -21067,6 +21082,23 @@
                         
                         container.appendChild(itemDiv);
                     });
+
+                    atualizarTotalSelecionado(productsArray, container);
+                }
+
+                function atualizarTotalSelecionado(productsArray, container) {
+                    // Só atualiza se existir o elemento de total associado a este container
+                    // (isso garante que só afeta a seção de ORÇAMENTOS, onde o elemento foi adicionado)
+                    const totalElement = container.parentNode.querySelector('.selected-items-total');
+                    if (!totalElement) return;
+
+                    const total = productsArray.reduce((soma, peca) => {
+                        const valorUnitario = parseFloat(peca.valor) || 0;
+                        const quantidade = parseInt(peca.quantity) || 0;
+                        return soma + (valorUnitario * quantidade);
+                    }, 0);
+
+                    totalElement.textContent = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
                 }
                 
                 function updateQuantity(index, change, productsArray, container) {
