@@ -21621,22 +21621,27 @@
                 }
             }
         });
-/*
+
         document.addEventListener("DOMContentLoaded", function () {
-            const modal = document.getElementById("confirmationModal");
-            const modalMessage = document.getElementById("modalMessage");
-            const protocoloInfo = document.getElementById("protocoloInfo");
+            const modalMessage = document.getElementById('modalMessage');
 
-            // Esconde informações de protocolo
-            protocoloInfo.style.display = "none";
+            protocoloInfo.style.display = 'none';
 
-            // Mensagem do popup inicial
-            modalMessage.textContent =
-                "Informamos que o valor mínimo para solicitação de faturamento foi atualizado.";
+            modalMessage.innerHTML =
+                `<div class="aviso-boletim">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <p>
+                        O valor mínimo para compra de peças em nossa rede foi atualizado para R$500,00.
+                        Para mais detalhes confira o
+                        <a href="https://raw.githubusercontent.com/Ventura-Pos-Vendas/status-clientes/main/assets/boletim_informativo_compras_de_peças.jpg" target="_blank">
+                            Boletim Informativo
+                        </a>.
+                    </p>
+                </div>`;
 
-            // Abre o modal
-            modal.style.display = "flex";
-        });*/
+            showModal();
+        });
+
         </script>
 
         <footer style="
