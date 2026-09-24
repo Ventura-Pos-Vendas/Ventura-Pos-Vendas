@@ -1703,6 +1703,10 @@
                 return `${prefixo}${ano}${mes}${dia}${timestamp}${aleatorio}`;
             }
 
+            const chavesSemValorMinimo = [
+                "CARSTATION597"
+            ];
+
             // chave de acesso revendas
             const revendedores = {
                 "JELTA482": "JELTA ADVENTURE",
@@ -20355,7 +20359,9 @@
                         }
 
                         // VALIDAÇÃO MÍNIMA DE R$ 500,00 SOMENTE PARA SOLICITAÇÃO DE FATURAMENTO
-                        if (tipoSolicitacao === 'faturamento') {
+                        const chaveDigitada = document.getElementById('codigov').value;
+
+                        if (tipoSolicitacao === 'faturamento' && !isentoValorMinimo(chaveDigitada)) {
                             const totalFaturamento = selectedProducts.reduce((total, peca) => {
                                 const valorUnitario = parseFloat(peca.valor) || 0;
                                 const quantidade = parseInt(peca.quantity) || 0;
