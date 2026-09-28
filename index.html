@@ -1707,6 +1707,10 @@
                 "CARSTATION597"
             ];
 
+            function isentoValorMinimo(chave) {
+                return chavesSemValorMinimo.includes((chave || '').trim().toUpperCase());
+            }
+
             // chave de acesso revendas
             const revendedores = {
                 "JELTA482": "JELTA ADVENTURE",
