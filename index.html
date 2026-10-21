@@ -19937,57 +19937,80 @@
                 });
                 
                 // FUNÇÃO ATUALIZADA: CONTROLAR CAMPOS CONDICIONAIS DA VENDA COM ENCOMENDA
+                // Elementos que serão "emprestados" para a encomenda
+                const idsEncomenda = [
+                    'saleStreetField', 'saleNumberField', 'saleNeighborhoodField',
+                    'saleStateField', 'saleCityField', 'saleZipField',
+                    'saleAddressSection', 'saleTransportadoraSection', 'saleObservationsSection'
+                ];
+                const marcadores = {};
+                idsEncomenda.forEach(id => {
+                    const el = document.getElementById(id);
+                    const marcador = document.createComment(id);
+                    el.parentNode.insertBefore(marcador, el);
+                    marcadores[id] = marcador;
+                });
+
+                function moverCamposParaEncomenda() {
+                    const grid = document.getElementById('codigoe').closest('.form-grid');
+                    const tituloPecas = encomendaSearchInput.closest('.container').previousElementSibling;
+
+                    idsEncomenda.forEach((id, i) => {
+                        const el = document.getElementById(id);
+                        el.classList.remove('hidden');
+                        if (i < 6) {
+                            grid.appendChild(el); // Rua, Número, Bairro, Estado, Cidade, CEP
+                        } else {
+                            tituloPecas.parentNode.insertBefore(el, tituloPecas); // Entrega, Transportadora, Observações
+                        }
+                    });
+                }
+
+                function devolverCamposParaVenda() {
+                    idsEncomenda.forEach(id => {
+                        const el = document.getElementById(id);
+                        const marcador = marcadores[id];
+                        marcador.parentNode.insertBefore(el, marcador.nextSibling);
+                    });
+                }
+
                 function toggleSaleFields() {
                     const tipo = saleType.value;
-                    
+
                     if (tipo === 'encomenda') {
-                        // Mostrar seção de encomenda
                         encomendaSection.classList.remove('hidden');
                         saleNormalFields.classList.add('hidden');
-                        
-                        // Remover required dos campos normais
+
                         const normalFields = saleNormalFields.querySelectorAll('[required]');
-                        normalFields.forEach(field => {
-                            field.required = false;
-                        });
-                        
-                        // Adicionar required aos campos da encomenda
+                        normalFields.forEach(field => { field.required = false; });
+
                         const encomendaFields = encomendaSection.querySelectorAll('input');
                         encomendaFields.forEach(field => {
                             if (field.id.includes('encomenda')) {
                                 field.required = true;
                             }
                         });
-                        
+
+                        moverCamposParaEncomenda();
+
                     } else {
-                        // Mostrar campos normais
+                        devolverCamposParaVenda();
+
                         encomendaSection.classList.add('hidden');
                         saleNormalFields.classList.remove('hidden');
-                        
-                        // Remover required dos campos da encomenda
+
                         const encomendaFields = encomendaSection.querySelectorAll('input');
-                        encomendaFields.forEach(field => {
-                            field.required = false;
-                        });
-                        
-                        // Controlar campos normais baseado no tipo
+                        encomendaFields.forEach(field => { field.required = false; });
+
                         conditionalFields.forEach(fieldId => {
                             const field = document.getElementById(fieldId);
                             if (field) {
                                 if (tipo === 'consulta') {
                                     field.classList.add('hidden');
-                                    // Remove required dos campos ocultos
-                                    const inputs = field.querySelectorAll('[required]');
-                                    inputs.forEach(input => {
-                                        input.required = false;
-                                    });
+                                    field.querySelectorAll('[required]').forEach(input => { input.required = false; });
                                 } else {
                                     field.classList.remove('hidden');
-                                    // Adiciona required nos campos visíveis
-                                    const inputs = field.querySelectorAll('[required]');
-                                    inputs.forEach(input => {
-                                        input.required = true;
-                                    });
+                                    field.querySelectorAll('[required]').forEach(input => { input.required = true; });
                                 }
                             }
                         });
@@ -20683,24 +20706,33 @@
                         let emailCliente = '';
                         
                         if (tipoSolicitacao === 'encomenda') {
-                            tipo = 'encomenda';
-                            emailCliente = encomendaEmail.value; // ✅ Email do cliente da encomenda
-                            
+                        tipo = 'encomenda';
+                            emailCliente = encomendaEmail.value;
+
+                            const enderecoFat = `${document.getElementById('dealerStreet').value}, ${document.getElementById('dealerNumber').value}, ${document.getElementById('dealerNeighborhood').value}, ${document.getElementById('dealerCity').value}/${document.getElementById('dealerState').value}`;
+                            const addressOption = document.querySelector('input[name="saleAddressOption"]:checked').value;
+                            const cepsEnc = coletarCEPs('encomenda');
+
                             dadosVenda = {
                                 tipo: tipo,
                                 revendedor: encomendaRevenda.value,
-                                email: emailCliente, // Email para o sistema
+                                email: emailCliente,
                                 encomendaRevenda: encomendaRevenda.value,
                                 encomendaEmail: emailCliente,
                                 encomendaCasoRelacionado: encomendaCasoRelacionado.value,
-                                endereco: 'ENCOMENDA - RETIRADA NA FÁBRICA',
-                                enderecoEntrega: 'ENCOMENDA - RETIRADA NA FÁBRICA',
+                                endereco: enderecoFat,
+                                enderecoEntrega: addressOption === 'factory' ? 'RETIRADA NA FÁBRICA' : enderecoFat,
                                 tipoSolicitacao: 'ENCOMENDA',
-                                cep: 'ENCOMENDA',
-                                cepEntrega: 'ENCOMENDA',
+                                cep: cepsEnc.cep,
+                                cepEntrega: cepsEnc.cepEntrega,
+                                transportadora: addressOption !== 'factory'
+                                    ? (document.querySelector('input[name="saleTransportadora"]:checked')?.value || 'rodonaves')
+                                    : null,
+                                observacoesFrete: document.getElementById('saleFreightObservations').value,
                                 pecas: encomendaSelectedProducts,
                                 anexos: []
                             };
+
                         } else {
                             let enderecoFaturamento = '';
                             let enderecoEntrega = '';
@@ -21000,6 +21032,20 @@
                                 alert('Por favor, preencha todos os campos obrigatórios da encomenda!');
                                 return false;
                             }
+
+                            const camposEnc = [
+                                    ['dealerStreet', 'Rua'], ['dealerNumber', 'Número'], ['dealerNeighborhood', 'Bairro'],
+                                    ['dealerState', 'Estado'], ['dealerCity', 'Cidade'], ['dealerZip', 'CEP Faturamento']
+                                ];
+                                const faltando = camposEnc
+                                    .filter(([id]) => !document.getElementById(id).value.trim())
+                                    .map(([, nome]) => nome);
+
+                                if (faltando.length > 0) {
+                                    alert('Por favor, preencha os seguintes campos obrigatórios:\n\n• ' + faltando.join('\n• '));
+                                    return false;
+                                }
+
                             return true;
                         }
                         
