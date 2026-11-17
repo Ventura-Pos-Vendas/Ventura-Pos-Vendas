@@ -1006,7 +1006,7 @@
                 <option value="">Selecione o tipo...</option>
                 <option value="consulta">ORÇAMENTO - (Apenas para consultar valores, NÃO será faturado)</option>
                 <option value="faturamento">FATURAMENTO - (Emitirá um pedido que será faturado e enviado)</option>
-                <option value="encomenda" style="display: none;">Encomenda</option>
+                <option value="encomenda">Encomenda</option>
             </select>
             <div class="error-message">Este campo é obrigatório</div>
         </div>
@@ -1072,6 +1072,7 @@
                     <div id="encomendaSelectedItemsContainer" class="selected-items-container">
                         <div class="no-items">Nenhuma peça selecionada</div>
                     </div>
+                    <div id="encomendaSelectedItemsTotal" class="selected-items-total">Total: R$ 0,00</div>
                     <button id="exportEncomendaBtn" class="btn btn-export"><i class="fas fa-envelope"></i> Enviar Encomenda</button>
                     <div id="encomendaLoading" class="loading">
                         <div class="spinner"></div>
@@ -23405,6 +23406,21 @@
                             alert('Nenhuma peça selecionada para a encomenda!');
                             return;
                         }
+
+                        const chaveEncomenda = document.getElementById('codigoe').value;
+
+                            if (!isentoValorMinimo(chaveEncomenda)) {
+                                const totalEncomenda = encomendaSelectedProducts.reduce((total, peca) => {
+                                    const valorUnitario = parseFloat(peca.valor) || 0;
+                                    const quantidade = parseInt(peca.quantity) || 0;
+                                    return total + (valorUnitario * quantidade);
+                                }, 0);
+
+                                if (totalEncomenda < 500) {
+                                    showMinimumValueModal(totalEncomenda);
+                                    return;
+                                }
+                            }
 
                         encomendaLoading.style.display = 'block';
                         exportEncomendaBtn.disabled = true;
